@@ -11,18 +11,41 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
 
  
-class potato(db.Model):
-    __tablename__ = "potato"
+class Donate(db.Model):
+    __tablename__ = "donate"
+    id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column('first_name', db.Unicode)
     last_name = db.Column('last_name', db.Unicode)
+    type_of_pet=db.Column('type_of_pet', db.Unicode)
+    age_of_pet=db.Column('age_of_pet', db.Unicode)
+    image_of_pet=db.Column('image_of_pet', db.Unicode)
+    phone_number=db.Column('phone_number', db.Unicode)
 
+    # def __init__
 db.create_all()
+
 
 
 
 
 @app.route('/submit_form', methods=['POST'])
 def submit_form():
+    username1 = request.form["fname"]
+    username2 = request.form["lname"]
+    username3 = request.form["tname"]
+    username4 = request.form["aname"]
+    username5 = request.form["iname"] 
+    username6 = request.form["pname"] 
+    
+    donate1=Donate(first_name=username1, last_name=username2, type_of_pet=username3, age_of_pet=username4, image_of_pet=username5, phone_number=username6)
+    
+    db.session.add(donate1)
+    db.session.commit()
+
+    users = Donate.query.all()
+    return render_template('adopt.html', var=users)
+
+
 
 # Create our database model
 class User(db.Model):
@@ -75,4 +98,3 @@ def prereg():
 if __name__ == '__main__':
     #app.debug = True
     app.run()
-
